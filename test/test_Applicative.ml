@@ -18,7 +18,7 @@ let test_fun_pure_opt =
 
 let test_fun_ap_list =
   QCheck.Test.make ~count:1000 ~name:"Ap List"
-  QCheck.(pair (list (fun1 Observable.int int)) (list int))
+  QCheck.(pair (list_of_size (Gen.int_bound 20) (fun1 Observable.int int)) (list_of_size (Gen.int_bound 20) int))
   ( fun (fs',xs) ->
     let fs = List.map QCheck.Fn.apply fs' in
     my_ap_list fs xs = (fs <*>.. xs) )
