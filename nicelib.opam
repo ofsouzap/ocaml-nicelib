@@ -4,8 +4,8 @@ synopsis: "Helpful stuff to make stuff easier"
 maintainer: ["Ofsouzap"]
 authors: ["Ofsouzap"]
 license: "MIT"
-homepage: "https://github.com/Ofsouzap/nicelib"
-bug-reports: "https://github.com/Ofsouzap/nicelib/issues"
+homepage: "https://github.com/Ofsouzap/ocaml-nicelib"
+bug-reports: "https://github.com/Ofsouzap/ocaml-nicelib/issues"
 depends: [
   "ocaml"
   "dune" {>= "3.13"}
@@ -28,4 +28,4 @@ build: [
     "@doc" {with-doc}
   ]
 ]
-dev-repo: "git+https://github.com/Ofsouzap/nicelib.git"
+dev-repo: "git+https://github.com/Ofsouzap/ocaml-nicelib.git"
