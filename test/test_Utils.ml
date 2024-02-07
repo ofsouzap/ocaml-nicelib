@@ -1,4 +1,4 @@
-open Nicelib
+open Nicelib.Utils
 
 let test_fun_compose =
   QCheck.Test.make ~count:1000 ~name:"Function composition"
