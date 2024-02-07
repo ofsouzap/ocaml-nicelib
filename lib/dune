@@ -1,4 +1,4 @@
 (library
  (public_name nicelib)
  (name nicelib)
- (libraries qcheck))
+ (libraries qcheck qcheck-alcotest))

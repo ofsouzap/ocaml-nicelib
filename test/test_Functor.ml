@@ -1,4 +1,5 @@
 open Nicelib.Functor
+open Nicelib.Checkers
 
 let test_fun_fmap_list =
   QCheck.Test.make ~count:1000 ~name:"Fmap List"
@@ -18,10 +19,12 @@ let test_fun_fmap_opt =
     in
     exp = (f <$>? x_opt) )
 
-let suite = List.map QCheck_alcotest.to_alcotest
+let fmap_impl_suite = List.map QCheck_alcotest.to_alcotest
   [ test_fun_fmap_list
   ; test_fun_fmap_opt ]
 
 let () =
   Alcotest.run "Functor"
-  [ "", suite ]
+  [ "Fmap implementation", fmap_impl_suite
+  ; "Option functor", functor_suite ( <$>? ) QCheck.(option int) QCheck.(fun1 Observable.int int)
+  ; "List functor", functor_suite ( <$>.. ) QCheck.(list int) QCheck.(fun1 Observable.int int) ]
