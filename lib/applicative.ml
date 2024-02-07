@@ -1,3 +1,5 @@
+open Functor
+
 let pure_opt x = Some x
 
 let pure_list x = [x]
@@ -8,7 +10,7 @@ let ( <*>? ) f_opt x_opt = match (f_opt, x_opt) with
 
 let ( <*>.. ) fs xs =
   let rec aux acc = function
-    | fh::fts, xh::xts -> aux (fh xh :: acc) (fts,xts)
-    | _, _ -> acc
+    | [] -> acc
+    | fh::fts -> aux (acc @ (fh <$>.. xs)) fts (* TODO - optimise with tail-recursion *)
   in
-  List.rev (aux [] (fs,xs))
+  aux [] fs

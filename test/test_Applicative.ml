@@ -1,9 +1,10 @@
 open Nicelib.Applicative
+open Nicelib.Functor
 open Nicelib.Checkers
 
-let rec my_ap_list fs xs = match (fs,xs) with
-  | fh::fts, xh::xts -> fh xh :: my_ap_list fts xts
-  | _, _ -> []
+let rec my_ap_list fs xs = match fs with
+  | [] -> []
+  | fh::fts -> (fh <$>.. xs) @ (my_ap_list fts xs)
 
 let test_fun_pure_list =
   QCheck.Test.make ~count:1000 ~name:"Pure List"
