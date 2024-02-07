@@ -7,4 +7,5 @@ val id : 'a -> 'a
 val const : 'a -> 'b -> 'a
 (** Constant function *)
 
-(* TODO `flip` *)
+val flip : ('a -> 'b -> 'c) -> 'b -> 'a -> 'c
+(** Flip function *)
