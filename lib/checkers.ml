@@ -1,6 +1,31 @@
 open Utils
 open Applicative
 
+(* Monoid laws found at https://wiki.haskell.org/Monoid *)
+
+let monoid_id_l mempty mappend arb =
+  QCheck.Test.make ~name:"Monoid - left identity"
+  arb
+  ( fun mx ->
+    mappend mempty mx = mx )
+
+let monoid_id_r mempty mappend arb =
+  QCheck.Test.make ~name:"Monoid - right identity"
+  arb
+  ( fun mx ->
+    mappend mx mempty = mx )
+
+let monoid_associativity _ mappend arb =
+  QCheck.Test.make ~name:"Monoid - associativity"
+  QCheck.(triple arb arb arb)
+  ( fun (mx,my,mz) ->
+    mappend (mappend mx my) mz = mappend mx (mappend my mz) )
+
+let monoid_suite mempty mappend arb = List.map QCheck_alcotest.to_alcotest
+  [ monoid_id_l mempty mappend arb
+  ; monoid_id_r mempty mappend arb
+  ; monoid_associativity mempty mappend arb ]
+
 (* Functor laws found at https://wiki.haskell.org/Functor#Functor_Laws *)
 
 let functor_id fmap arb _ =
