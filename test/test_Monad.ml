@@ -1,5 +1,13 @@
 open Nicelib.Monad
 
+let my_small_list =
+  let open QCheck in
+  list_of_size (Gen.int_bound 20)
+
+let rec my_bind_list xs f = match xs with
+  | [] -> []
+  | h::ts -> f h @ my_bind_list ts f
+
 let test_fun_return_list =
   QCheck.Test.make ~count:1000 ~name:"Return List"
   QCheck.(int)
@@ -12,12 +20,12 @@ let test_fun_return_opt =
   ( fun x ->
     return_opt x = Some x )
 
-(* let test_fun_bind_list =
+let test_fun_bind_list =
   QCheck.Test.make ~count:1000 ~name:"Bind List"
-  QCheck.(pair (list (fun1 Observable.int int)) (list int))
-  ( fun (fs',xs) ->
-    let fs = List.map QCheck.Fn.apply fs' in
-    failwith "TODO" ) *)
+  QCheck.(pair (fun1 Observable.int (my_small_list int)) (my_small_list int))
+  ( fun (f',xs) ->
+    let f = QCheck.Fn.apply f' in
+    my_bind_list xs f = (xs >>=.. f) )
 
 let test_fun_bind_opt =
   QCheck.Test.make ~count:1000 ~name:"Bind Option"
@@ -30,12 +38,15 @@ let test_fun_bind_opt =
         | None -> None = (x_opt >>=? f)
         | Some _ as y -> y = (x_opt >>=? f) ) )
 
-let suite = List.map QCheck_alcotest.to_alcotest
+let return_suite = List.map QCheck_alcotest.to_alcotest
   [ test_fun_return_list
-  ; test_fun_return_opt
-  (* ; test_fun_bind_list *)
+  ; test_fun_return_opt ]
+
+let bind_suite = List.map QCheck_alcotest.to_alcotest
+  [ test_fun_bind_list
   ; test_fun_bind_opt ]
 
 let () =
   Alcotest.run "Monad"
-  [ "", suite ]
+  [ "Return implementation", return_suite
+  ; "Bind implementation", bind_suite ]

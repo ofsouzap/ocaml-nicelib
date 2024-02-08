@@ -12,4 +12,5 @@ val return_list : 'a -> 'a list
 val ( >>=? ) : 'a option -> ('a -> 'b option) -> 'b option
 (** Bind for the option monad *)
 
-(* TODO - list monad *)
+val ( >>=.. ) : 'a list -> ('a -> 'b list) -> 'b list
+(** Bind for the list monad *)

@@ -11,3 +11,5 @@ val applicative_list_suite : 'a list QCheck.arbitrary -> ('a list -> 'b) QCheck.
 
 val applicative_opt_suite : 'a option QCheck.arbitrary -> ('a option -> 'b) QCheck.fun_ QCheck.arbitrary -> unit Alcotest.test_case list
 (** Test the optional applicative implementation *)
+
+(* TODO - monad checkers *)
