@@ -1,4 +1,5 @@
 open Nicelib.Monad
+open Nicelib.Checkers
 
 let my_small_list =
   let open QCheck in
@@ -49,4 +50,6 @@ let bind_suite = List.map QCheck_alcotest.to_alcotest
 let () =
   Alcotest.run "Monad"
   [ "Return implementation", return_suite
-  ; "Bind implementation", bind_suite ]
+  ; "Bind implementation", bind_suite
+  ; "Option monad", monad_suite return_opt ( >>=? ) QCheck.(option int) QCheck.(fun1 Observable.int (option int)) QCheck.int
+  ; "List monad", monad_suite return_list ( >>=.. ) QCheck.(my_small_list int) QCheck.(fun1 Observable.int (my_small_list int)) QCheck.int ]

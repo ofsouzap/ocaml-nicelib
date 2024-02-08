@@ -81,3 +81,30 @@ let applicative_opt_suite arb f_arb = List.map QCheck_alcotest.to_alcotest
   [ applicative_id pure_opt ( <*>? ) arb f_arb
   ; applicative_composition pure_opt ( <*>? ) arb f_arb
   ; applicative_homomorphism_opt arb f_arb ]
+
+(* Monad laws found at https://wiki.haskell.org/Monad_laws *)
+
+let monad_left_identity return bind _ f_arb x_arb =
+  QCheck.Test.make ~name:"Monad - left identity"
+  QCheck.(pair x_arb f_arb)
+  ( fun (x,f') ->
+    let f = QCheck.Fn.apply f' in
+    (bind (return x) f) = f x )
+
+let monad_right_identity return bind arb _ _ =
+  QCheck.Test.make ~name:"Monad - right identity"
+  arb
+  ( fun mx ->
+    bind mx return = mx )
+
+let monad_associativity _ bind arb f_arb _ =
+  QCheck.Test.make ~name:"Monad - associativity"
+  QCheck.(triple arb f_arb f_arb)
+  ( fun (mx,f',g') ->
+    let f,g = QCheck.Fn.apply f', QCheck.Fn.apply g' in
+    (bind (bind mx f) g) = (bind mx (fun y -> bind (f y) g)) )
+
+let monad_suite return bind arb f_arb x_arb = List.map QCheck_alcotest.to_alcotest
+  [ monad_left_identity return bind arb f_arb x_arb
+  ; monad_right_identity return bind arb f_arb x_arb
+  ; monad_associativity return bind arb f_arb x_arb ]
