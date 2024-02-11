@@ -16,7 +16,7 @@ val add : 'a -> 'a t -> 'a t
 val member : 'a -> 'a t -> bool
 
 (** The number of elements in the set *)
-val compte : 'a t -> int
+val length : 'a t -> int
 
 (** Intersection of two sets *)
 val intersection : 'a t -> 'a t -> 'a t

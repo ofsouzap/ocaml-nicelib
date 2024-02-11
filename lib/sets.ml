@@ -20,7 +20,7 @@ let rec member x = function
     then true
     else member x ts
 
-let compte = List.length
+let length = List.length
 
 let intersection xs =
   let rec aux acc = function
