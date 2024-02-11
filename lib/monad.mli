@@ -14,3 +14,5 @@ val ( >>=? ) : 'a option -> ('a -> 'b option) -> 'b option
 
 val ( >>=.. ) : 'a list -> ('a -> 'b list) -> 'b list
 (** Bind for the list monad *)
+
+(* TODO - set monad *)

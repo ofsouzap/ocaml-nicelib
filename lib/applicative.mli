@@ -9,3 +9,5 @@ val ( <*>? ) : ('a -> 'b) option -> 'a option -> 'b option
 
 val ( <*>.. ) : ('a -> 'b) list -> 'a list -> 'b list
 (** Apply for the list applicative *)
+
+(* TODO - set applicative *)
