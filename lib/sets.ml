@@ -1,10 +1,10 @@
 (* TODO - do this properly, e.g. with binary search trees *)
 
-type 'a set = 'a list
+type 'a t = 'a list
 
-let vide : 'a set = []
+let empty : 'a t = []
 
-let singleton (x : 'a) : 'a set = [x]
+let singleton (x : 'a) : 'a t = [x]
 
 let rec add x = function
   | [] -> [x]
@@ -29,7 +29,7 @@ let intersection xs =
       (if member h xs then add h acc else acc)
       ts
   in
-  aux vide
+  aux empty
 
 let rec union xs = function
   | [] -> xs
@@ -51,10 +51,10 @@ let rec equal (xs : 'a list) (ys : 'a list) : bool =
       | None -> false
       | Some ys' -> equal xts ys' )
 
-let list_of_set (xs : 'a set) : 'a list = xs
+let list_of_set (xs : 'a t) : 'a list = xs
 
-let set_of_list (xs : 'a list) : 'a set =
-  List.fold_left (fun acc x -> add x acc) vide xs
+let set_of_list (xs : 'a list) : 'a t =
+  List.fold_left (fun acc x -> add x acc) empty xs
 
 let set_gen gen = QCheck.Gen.map set_of_list QCheck.Gen.(list gen)
 

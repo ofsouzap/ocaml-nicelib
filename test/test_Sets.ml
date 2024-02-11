@@ -3,7 +3,7 @@ open Nicelib.Sets
 let my_tiny_int = QCheck.int_bound 20
 
 let test_empty_int =
-  "Empty", `Quick, ( fun () -> Alcotest.(check (list int)) "" [] (list_of_set vide) )
+  "Empty", `Quick, ( fun () -> Alcotest.(check (list int)) "" [] (list_of_set empty) )
 
 let test_singleton =
   QCheck.Test.make ~count:1000 ~name:"Singleton"
