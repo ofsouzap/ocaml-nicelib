@@ -20,10 +20,18 @@ let test_fun_fmap_opt =
     in
     exp = (f <$>? x_opt) )
 
+let test_fun_fmap_set =
+  QCheck.Test.make ~count:1000 ~name:"Fmap Set"
+  QCheck.(pair (fun1 Observable.int int) (Sets.set_arb_max 20 int))
+  ( fun (f',xs) ->
+    let f = QCheck.Fn.apply f' in
+    let exp = Sets.set_of_list (f <$>.. Sets.list_of_set xs) in
+    exp = (f <$>~~ xs) )
+
 let fmap_impl_suite = List.map QCheck_alcotest.to_alcotest
   [ test_fun_fmap_list
-  ; test_fun_fmap_opt ]
-  (* TODO - test fmap impl for set *)
+  ; test_fun_fmap_opt
+  ; test_fun_fmap_set ]
 
 let () =
   Alcotest.run "Functor"

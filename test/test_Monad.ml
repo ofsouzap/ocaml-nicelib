@@ -1,4 +1,6 @@
 open Nicelib
+open Nicelib.Utils
+open Nicelib.Functor
 open Nicelib.Monad
 open Nicelib.Checkers
 
@@ -25,6 +27,12 @@ let test_fun_return_opt =
   ( fun x ->
     return_opt x = Some x )
 
+let test_fun_return_set =
+  QCheck.Test.make ~count:1000 ~name:"Return Set"
+  QCheck.(int)
+  ( fun x ->
+    return_set x = Sets.singleton x )
+
 let test_fun_bind_list =
   QCheck.Test.make ~count:1000 ~name:"Bind List"
   QCheck.(pair (fun1 Observable.int (my_small_list int)) (my_small_list int))
@@ -43,11 +51,13 @@ let test_fun_bind_opt =
         | None -> None = (x_opt >>=? f)
         | Some _ as y -> y = (x_opt >>=? f) ) )
 
-let test_fun_return_set =
-  QCheck.Test.make ~count:1000 ~name:"Return Set"
-  QCheck.(int)
-  ( fun x ->
-    return_set x = Sets.singleton x )
+let test_fun_bind_set =
+  QCheck.Test.make ~count:1000 ~name:"Bind Set"
+  QCheck.(pair (fun1 Observable.int (Sets.set_arb_max 20 int)) (Sets.set_arb_max 20 int))
+  ( fun (f', xs) ->
+    let f = QCheck.Fn.apply f' in
+    let res = xs >>=~~ f in
+    ((Sets.set_of_list -.- List.flatten -.- Sets.list_of_set) ((Sets.list_of_set -.- f) <$>~~ xs)) = res )
 
 let return_suite = List.map QCheck_alcotest.to_alcotest
   [ test_fun_return_list
@@ -56,8 +66,8 @@ let return_suite = List.map QCheck_alcotest.to_alcotest
 
 let bind_suite = List.map QCheck_alcotest.to_alcotest
   [ test_fun_bind_list
-  ; test_fun_bind_opt ]
-  (* TODO - test set bind impl *)
+  ; test_fun_bind_opt
+  ; test_fun_bind_set ]
 
 let () =
   Alcotest.run "Monad"
