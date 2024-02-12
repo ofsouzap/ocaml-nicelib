@@ -18,6 +18,12 @@ val try_remove : 'a -> 'a t -> bool * 'a t
 (** Try to remove an element from a set and return the result. Use try_remove if you want to know whether the element was found in the set *)
 val remove : 'a -> 'a t -> 'a t
 
+(** Check if any elements of the set satisfy a predicate *)
+val any : ('a -> bool) -> 'a t -> bool
+
+(** Check if all elements of the set satisfy a predicate *)
+val all : ('a -> bool) -> 'a t -> bool
+
 (** Is an element a member of a set *)
 val member : 'a -> 'a t -> bool
 

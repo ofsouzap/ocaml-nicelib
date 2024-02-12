@@ -1,3 +1,4 @@
+open Nicelib.Utils
 open Nicelib.Sets
 
 let my_tiny_int = QCheck.int_bound 20
@@ -64,6 +65,20 @@ let test_remove_contains =
     let xs = add x xs' in
     not (member x (remove x xs)) )
 
+let test_any =
+  QCheck.Test.make ~count:100 ~name:"Any"
+  QCheck.(pair (set_arb_max 10 int) (fun1 Observable.int bool))
+  ( fun (xs,f') ->
+    let f = QCheck.Fn.apply f' in
+    any f xs = (List.exists f -.- list_of_set) xs )
+
+let test_all =
+  QCheck.Test.make ~count:100 ~name:"All"
+  QCheck.(pair (set_arb_max 10 int) (fun1 Observable.int bool))
+  ( fun (xs,f') ->
+    let f = QCheck.Fn.apply f' in
+    all f xs = (List.for_all f -.- list_of_set) xs )
+
 let unary_suite = List.map QCheck_alcotest.to_alcotest
   [ test_add
   ; test_try_remove_might_contain_result
@@ -71,7 +86,9 @@ let unary_suite = List.map QCheck_alcotest.to_alcotest
   ; test_try_remove_might_contain_found_value
   ; test_try_remove_contains_found_value
   ; test_remove_might_contain
-  ; test_remove_contains ]
+  ; test_remove_contains
+  ; test_any
+  ; test_all ]
 
 let test_intersection_maybe_contains =
   QCheck.Test.make ~count:1000 ~name:"Intersection"

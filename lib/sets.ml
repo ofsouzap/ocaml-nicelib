@@ -24,12 +24,21 @@ let try_remove x xs =
 
 let remove x = snd -.- try_remove x
 
-let rec member x = function
+let rec any f = function
   | [] -> false
   | h::ts ->
-    if x = h
+    if f h
     then true
-    else member x ts
+    else any f ts
+
+let rec all f = function
+  | [] -> true
+  | h::ts ->
+    if (not -.- f) h
+    then false
+    else all f ts
+
+let member x = any (( = ) x)
 
 let length = List.length
 
