@@ -21,8 +21,57 @@ let test_add =
   ( fun (xs, x) ->
     member x (add x xs) )
 
-let suite_unaire = List.map QCheck_alcotest.to_alcotest
-  [ test_add ]
+let test_try_remove_might_contain_result =
+  let open Nicelib.Utils in
+  QCheck.Test.make ~count:1000 ~name:"Try remove might contain - result"
+  QCheck.(pair (set_arb_max 10 int) int)
+  ( fun (xs,x) ->
+    (not -.- member x -.- snd -.- try_remove x) xs )
+
+let test_try_remove_contains_result =
+  let open Nicelib.Utils in
+  QCheck.Test.make ~count:1000 ~name:"Try remove contains - result"
+  QCheck.(pair (set_arb_max 10 int) int)
+  ( fun (xs',x) ->
+    let xs = add x xs' in
+    (not -.- member x -.- snd -.- try_remove x) xs )
+
+let test_try_remove_might_contain_found_value =
+  let open Nicelib.Utils in
+  QCheck.Test.make ~count:1000 ~name:"Try remove might contain - found value"
+  QCheck.(pair (set_arb_max 10 int) int)
+  ( fun (xs,x) ->
+    ((fst -.- try_remove x) xs) = (member x xs) )
+
+let test_try_remove_contains_found_value =
+  let open Nicelib.Utils in
+  QCheck.Test.make ~count:1000 ~name:"Try remove contains - found value"
+  QCheck.(pair (set_arb_max 10 int) int)
+  ( fun (xs',x) ->
+    let xs = add x xs' in
+    (fst -.- try_remove x) xs )
+
+let test_remove_might_contain =
+  QCheck.Test.make ~count:1000 ~name:"Remove might contain"
+  QCheck.(pair (set_arb_max 10 int) int)
+  ( fun (xs,x) ->
+    not (member x (remove x xs)) )
+
+let test_remove_contains =
+  QCheck.Test.make ~count:1000 ~name:"Remove contains"
+  QCheck.(pair (set_arb_max 10 int) int)
+  ( fun (xs',x) ->
+    let xs = add x xs' in
+    not (member x (remove x xs)) )
+
+let unary_suite = List.map QCheck_alcotest.to_alcotest
+  [ test_add
+  ; test_try_remove_might_contain_result
+  ; test_try_remove_contains_result
+  ; test_try_remove_might_contain_found_value
+  ; test_try_remove_contains_found_value
+  ; test_remove_might_contain
+  ; test_remove_contains ]
 
 let test_intersection_maybe_contains =
   QCheck.Test.make ~count:1000 ~name:"Intersection"
@@ -105,5 +154,5 @@ let () =
   let open Alcotest in
   run "Sets"
   [ "Construction", suite_contruction
-  ; "Unary operations", suite_unaire
+  ; "Unary operations", unary_suite
   ; "Binary operations", binary_suite ]

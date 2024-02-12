@@ -12,6 +12,12 @@ val singleton : 'a -> 'a t
 (** Add an element to a set *)
 val add : 'a -> 'a t -> 'a t
 
+(** Try to remove an element from a set. Returns the result and whether the element was found *)
+val try_remove : 'a -> 'a t -> bool * 'a t
+
+(** Try to remove an element from a set and return the result. Use try_remove if you want to know whether the element was found in the set *)
+val remove : 'a -> 'a t -> 'a t
+
 (** Is an element a member of a set *)
 val member : 'a -> 'a t -> bool
 

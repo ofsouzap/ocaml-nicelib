@@ -1,3 +1,5 @@
+open Utils
+
 (* TODO - do this properly, e.g. with binary search trees *)
 
 type 'a t = 'a list
@@ -12,6 +14,15 @@ let rec add x = function
     if x = h
     then xs
     else h :: add x ts
+
+let try_remove x xs =
+  let rec aux acc = function
+    | [] -> (false, acc)
+    | h::ts -> if h = x then (true, acc @ ts) else aux (h::acc) ts
+  in
+  aux [] xs
+
+let remove x = snd -.- try_remove x
 
 let rec member x = function
   | [] -> false
