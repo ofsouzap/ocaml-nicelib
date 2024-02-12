@@ -18,6 +18,9 @@ val member : 'a -> 'a t -> bool
 (** The number of elements in the set *)
 val length : 'a t -> int
 
+(** Apply a function to all the elements in a set *)
+val map : ('a -> 'b) -> 'a t -> 'b t
+
 (** Intersection of two sets *)
 val intersection : 'a t -> 'a t -> 'a t
 

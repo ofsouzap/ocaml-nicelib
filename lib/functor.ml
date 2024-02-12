@@ -3,3 +3,5 @@ let ( <$>? ) f = function
   | Some x -> Some (f x)
 
 let ( <$>.. ) = List.map
+
+let ( <$>~~ ) = Sets.map

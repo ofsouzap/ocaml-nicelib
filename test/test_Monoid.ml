@@ -1,3 +1,4 @@
+open Nicelib
 open Nicelib.Monoid
 open Nicelib.Checkers
 
@@ -13,4 +14,5 @@ let mappend_impl_suite = List.map QCheck_alcotest.to_alcotest
 let () =
   Alcotest.run "Monoid"
   [ "Mappend implementation", mappend_impl_suite
-  ; "List monoid", monoid_suite mempty_list ( <>.. ) QCheck.(list int) ]
+  ; "List monoid", monoid_suite mempty_list ( <>.. ) QCheck.(list int)
+  ; "Set monoid", monoid_suite mempty_set ( <>~~ ) QCheck.(Sets.set_arb int) ]

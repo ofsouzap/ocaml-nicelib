@@ -1,3 +1,4 @@
+open Nicelib
 open Nicelib.Applicative
 open Nicelib.Functor
 open Nicelib.Checkers
@@ -18,9 +19,16 @@ let test_fun_pure_opt =
   ( fun x ->
     pure_opt x = Some x )
 
+let test_fun_pure_set =
+  QCheck.Test.make ~count:1000 ~name:"Pure Set"
+  QCheck.(int)
+  ( fun x ->
+    pure_set x = Sets.singleton x )
+
 let pure_suite = List.map QCheck_alcotest.to_alcotest
   [ test_fun_pure_list
-  ; test_fun_pure_opt ]
+  ; test_fun_pure_opt
+  ; test_fun_pure_set ]
 
 let test_fun_ap_list =
   QCheck.Test.make ~count:1000 ~name:"Ap List"
@@ -40,10 +48,13 @@ let test_fun_ap_opt =
 let ap_suite = List.map QCheck_alcotest.to_alcotest
   [ test_fun_ap_list
   ; test_fun_ap_opt ]
+  (* TODO - test ap implementation for Sets.t *)
 
 let () =
   Alcotest.run "Applicative"
   [ "Pure implementation", pure_suite
   ; "Ap implementation", ap_suite
-  ; "Option functor", applicative_opt_suite QCheck.(option int) QCheck.(fun1 Observable.(option int) int)
-  ; "List functor", applicative_list_suite  QCheck.(list int) QCheck.(fun1 Observable.(list int) int) ]
+  ; "Option applicative", applicative_opt_suite QCheck.(option int) QCheck.(fun1 Observable.(option int) int)
+  ; "List applicative", applicative_list_suite  QCheck.(list int) QCheck.(fun1 Observable.(list int) int)
+  (* ; "Set applicative", applicative_set_suite  QCheck.(Sets.set_arb int) QCheck.(fun1 Observable.(Sets.set_arb int) int) *) (* TODO - create observable for set for this *)
+  ]

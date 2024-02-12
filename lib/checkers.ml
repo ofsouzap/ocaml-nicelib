@@ -72,6 +72,13 @@ let applicative_homomorphism_opt arb f_arb =
     let f = QCheck.Fn.apply f' in
     (pure_opt f <*>? Some x) = Some (f x) )
 
+let applicative_homomorphism_set arb f_arb =
+  QCheck.Test.make ~name:"Applicative - homomorphism"
+  QCheck.(pair arb f_arb)
+  ( fun (x,f') ->
+    let f = QCheck.Fn.apply f' in
+    (pure_set f <*>~~ Sets.singleton x) = Sets.singleton (f x) )
+
 let applicative_list_suite arb f_arb = List.map QCheck_alcotest.to_alcotest
   [ applicative_id pure_list ( <*>.. ) arb f_arb
   ; applicative_composition pure_list ( <*>.. ) arb f_arb
@@ -81,6 +88,11 @@ let applicative_opt_suite arb f_arb = List.map QCheck_alcotest.to_alcotest
   [ applicative_id pure_opt ( <*>? ) arb f_arb
   ; applicative_composition pure_opt ( <*>? ) arb f_arb
   ; applicative_homomorphism_opt arb f_arb ]
+
+let applicative_set_suite arb f_arb = List.map QCheck_alcotest.to_alcotest
+  [ applicative_id pure_set ( <*>~~ ) arb f_arb
+  ; applicative_composition pure_set ( <*>~~ ) arb f_arb
+  ; applicative_homomorphism_set arb f_arb ]
 
 (* Monad laws found at https://wiki.haskell.org/Monad_laws *)
 

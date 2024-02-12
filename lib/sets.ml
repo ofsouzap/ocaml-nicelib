@@ -22,6 +22,8 @@ let rec member x = function
 
 let length = List.length
 
+let map = List.map
+
 let intersection xs =
   let rec aux acc = function
     | [] -> acc
